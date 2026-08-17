@@ -1,0 +1,50 @@
+services:
+  # 1. Spring Boot Backend Web Service
+  - type: web
+    name: smartfood-backend
+    runtime: docker
+    dockerContext: backend
+    dockerfilePath: backend/Dockerfile
+    plan: free
+    region: oregon
+    envVars:
+      - key: PORT
+        value: 8080
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRATION_MS
+        value: 86400000
+      - key: REFRESH_TOKEN_EXPIRATION_MS
+        value: 604800000
+      - key: PAYMENT_MODE
+        value: MOCK
+      - key: AI_MODE
+        value: GEMINI
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMINI_MODEL
+        value: gemini-1.5-flash
+      - key: MAIL_HOST
+        value: smtp.gmail.com
+      - key: MAIL_PORT
+        value: 587
+      - key: MAIL_USERNAME
+        sync: false
+      - key: MAIL_PASSWORD
+        sync: false
+      - key: ADMIN_EMAIL
+        value: admin@smartfood.com
+      - key: ADMIN_PASSWORD
+        value: Admin@123
+
+  # 2. Admin Web Frontend (React/Vite Static Site)
+  - type: web
+    name: smartfood-admin
+    runtime: static
+    rootDir: admin-web
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    plan: free
+    region: oregon
