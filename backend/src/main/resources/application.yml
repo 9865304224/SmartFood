@@ -1,0 +1,74 @@
+server:
+  port: ${PORT:8080}
+  servlet:
+    context-path: /
+
+spring:
+  application:
+    name: smartfood-backend
+  data:
+    mongodb:
+      uri: ${MONGODB_URI:mongodb+srv://bishalchaudhary981223_db_user:lLCXmtVXrcoeVAge@cluster0.hslvxc4.mongodb.net/smartfood_db?retryWrites=true&w=majority&appName=Cluster0}
+      auto-index-creation: true
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  mail:
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:techearn357@gmail.com}
+    password: ${MAIL_PASSWORD:jvzcdegmeybslcmt}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          connectiontimeout: 10000
+          timeout: 10000
+          writetimeout: 10000
+
+smartfood:
+  admin:
+    email: ${ADMIN_EMAIL:admin@smartfood.com}
+    password: ${ADMIN_PASSWORD:Admin@123}
+  security:
+    jwt:
+      secret: ${JWT_SECRET:smartfood_super_secure_jwt_secret_key_which_is_at_least_256_bits_long_for_hmac_sha256}
+      access-token-expiration-ms: ${JWT_EXPIRATION_MS:86400000} # 24 hours
+      refresh-token-expiration-ms: ${REFRESH_TOKEN_EXPIRATION_MS:604800000} # 7 days
+  payment:
+    mode: ${PAYMENT_MODE:MOCK} # MOCK or RAZORPAY
+    razorpay:
+      key-id: ${RAZORPAY_KEY_ID:rzp_test_mock_key_id}
+      key-secret: ${RAZORPAY_KEY_SECRET:rzp_test_mock_secret}
+  ai:
+    mode: ${AI_MODE:GEMINI} # DETERMINISTIC_FALLBACK or OPENAI or GEMINI
+    api-key: ${GEMINI_API_KEY:${AI_API_KEY:}}
+    gemini:
+      model: ${GEMINI_MODEL:gemini-1.5-flash}
+  fcm:
+    enabled: ${FCM_ENABLED:false}
+    service-account-key-path: ${FCM_KEY_PATH:}
+  delivery:
+    max-extra-delay-minutes: ${MAX_EXTRA_DELAY_MINUTES:15}
+    max-group-distance-km: ${MAX_GROUP_DISTANCE_KM:3.5}
+    base-delivery-fee: 30.0
+    per-km-fee: 8.0
+    platform-fee: 5.0
+    gst-percentage: 5.0
+  storage:
+    type: ${STORAGE_TYPE:CLOUDINARY} # CLOUDINARY or LOCAL
+    upload-dir: ${UPLOAD_DIR:uploads}
+    cloudinary:
+      cloud-name: ${CLOUDINARY_CLOUD_NAME:m61xswna}
+      api-key: ${CLOUDINARY_API_KEY:157452369963142}
+      api-secret: ${CLOUDINARY_API_SECRET:HClj6RH54IYbCvKmbmALj5TQce4}
+
+logging:
+  level:
+    root: INFO
+    com.smartfood: DEBUG
+    org.springframework.data.mongodb.core.MongoTemplate: INFO

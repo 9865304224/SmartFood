@@ -1,0 +1,6 @@
+@echo off
+title SmartFood Flutter Mobile (Port 4000)
+echo Navigating to mobile directory...
+cd /d "%~dp0mobile"
+echo Starting SmartFood Flutter Mobile on http://localhost:4000...
+flutter run -d chrome --web-port=4000

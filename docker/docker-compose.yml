@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: smartfood-mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: smartfood_db
+    volumes:
+      - mongo_data:/data/db
+
+  backend:
+    build:
+      context: ../backend
+      dockerfile: ../docker/Dockerfile.backend
+    container_name: smartfood-backend
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      MONGODB_URI: mongodb://mongodb:27017/smartfood_db
+      JWT_SECRET: smartfood_super_secure_jwt_secret_key_which_is_at_least_256_bits_long_for_hmac_sha256
+      PAYMENT_MODE: MOCK
+      AI_MODE: DETERMINISTIC_FALLBACK
+    depends_on:
+      - mongodb
+
+  admin-web:
+    build:
+      context: ../admin-web
+      dockerfile: ../docker/Dockerfile.admin
+    container_name: smartfood-admin-web
+    restart: always
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  mongo_data:
