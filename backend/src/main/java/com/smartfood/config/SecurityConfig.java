@@ -52,18 +52,32 @@ public class SecurityConfig {
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        // Public Endpoints
+                        // 1. Allow Preflight CORS OPTIONS requests
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                        // 2. Public Root & Health Check Endpoints
+                        .requestMatchers("/", "/health", "/api/health", "/error", "/favicon.ico").permitAll()
+
+                        // 3. Authentication & User Onboarding Endpoints
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/public/**").permitAll()
-                        .requestMatchers("/ws-smartfood/**").permitAll()
+
+                        // 4. Public Food & Entity Browsing Endpoints
                         .requestMatchers(HttpMethod.GET, "/api/restaurants/public/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/hotels/public/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/menu/public/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/food-saver/public/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/upload/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/recommendations/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/recommendations/smart-budget").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/recommendations/ai-assistant").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/reviews/**").permitAll()
 
-                        // Role-Based Endpoints
+                        // 5. Public Upload & Static/WebSocket Endpoints
+                        .requestMatchers(HttpMethod.POST, "/api/upload/**").permitAll()
+                        .requestMatchers("/uploads/**", "/static/**", "/ws-smartfood/**").permitAll()
+
+                        // 6. Swagger & Documentation Endpoints
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+
+                        // 7. Role-Based Protected Endpoints
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/restaurants/**").hasAnyRole("RESTAURANT", "ADMIN")
                         .requestMatchers("/api/hotels/**").hasAnyRole("HOTEL", "ADMIN")
@@ -71,8 +85,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/customers/**").hasAnyRole("CUSTOMER", "ADMIN")
                         .requestMatchers("/api/cart/**").hasAnyRole("CUSTOMER", "ADMIN")
                         .requestMatchers("/api/group-orders/**").hasAnyRole("CUSTOMER", "ADMIN")
-                        
-                        // All other authenticated requests
+
+                        // 8. All other requests require valid JWT authentication
                         .anyRequest().authenticated()
                 );
 
@@ -85,9 +99,9 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOriginPatterns(List.of("*"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With", "Accept", "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers"));
-        configuration.setExposedHeaders(List.of("Authorization"));
+        configuration.setExposedHeaders(Arrays.asList("Authorization", "Content-Disposition"));
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
 

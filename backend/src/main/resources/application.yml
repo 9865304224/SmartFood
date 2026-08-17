@@ -8,7 +8,7 @@ spring:
     name: smartfood-backend
   data:
     mongodb:
-      uri: ${MONGODB_URI:mongodb+srv://bishalchaudhary981223_db_user:lLCXmtVXrcoeVAge@cluster0.hslvxc4.mongodb.net/smartfood_db?retryWrites=true&w=majority&appName=Cluster0}
+      uri: ${MONGODB_URI:mongodb://localhost:27017/smartfood_db}
       auto-index-creation: true
   servlet:
     multipart:
@@ -17,8 +17,8 @@ spring:
   mail:
     host: ${MAIL_HOST:smtp.gmail.com}
     port: ${MAIL_PORT:587}
-    username: ${MAIL_USERNAME:techearn357@gmail.com}
-    password: ${MAIL_PASSWORD:jvzcdegmeybslcmt}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
     properties:
       mail:
         smtp:
@@ -63,9 +63,9 @@ smartfood:
     type: ${STORAGE_TYPE:CLOUDINARY} # CLOUDINARY or LOCAL
     upload-dir: ${UPLOAD_DIR:uploads}
     cloudinary:
-      cloud-name: ${CLOUDINARY_CLOUD_NAME:m61xswna}
-      api-key: ${CLOUDINARY_API_KEY:157452369963142}
-      api-secret: ${CLOUDINARY_API_SECRET:HClj6RH54IYbCvKmbmALj5TQce4}
+      cloud-name: ${CLOUDINARY_CLOUD_NAME:}
+      api-key: ${CLOUDINARY_API_KEY:}
+      api-secret: ${CLOUDINARY_API_SECRET:}
 
 logging:
   level:

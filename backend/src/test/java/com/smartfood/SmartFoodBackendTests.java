@@ -1,20 +1,17 @@
 package com.smartfood;
 
 import com.smartfood.ai.SmartBudgetService;
+import com.smartfood.controller.HomeController;
 import com.smartfood.dto.ai.SmartBudgetRequest;
 import com.smartfood.dto.ai.SmartBudgetResponse;
-import com.smartfood.dto.auth.LoginRequest;
 import com.smartfood.dto.auth.RegisterRequest;
 import com.smartfood.model.Coupon;
 import com.smartfood.model.CustomerProfile;
 import com.smartfood.model.FoodItem;
 import com.smartfood.model.GeoLocation;
-import com.smartfood.model.Order;
-import com.smartfood.model.OrderStatusHistory;
 import com.smartfood.model.RestaurantProfile;
 import com.smartfood.model.User;
 import com.smartfood.model.enums.ApprovalStatus;
-import com.smartfood.model.enums.OrderStatus;
 import com.smartfood.model.enums.UserRole;
 import com.smartfood.repository.CustomerProfileRepository;
 import com.smartfood.repository.DeliveryProfileRepository;
@@ -26,19 +23,17 @@ import com.smartfood.repository.RestaurantProfileRepository;
 import com.smartfood.repository.UserRepository;
 import com.smartfood.security.JwtTokenProvider;
 import com.smartfood.service.AuthService;
-import com.smartfood.service.OrderService;
-import org.junit.jupiter.api.BeforeEach;
+import com.smartfood.service.EmailService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.time.Instant;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -76,6 +71,9 @@ class SmartFoodBackendTests {
 
     @Mock
     private JwtTokenProvider jwtTokenProvider;
+
+    @Mock
+    private EmailService emailService;
 
     @InjectMocks
     private AuthService authService;
@@ -188,5 +186,16 @@ class SmartFoodBackendTests {
         for (var combo : response.getRecommendations()) {
             assertTrue(combo.getGrandTotal() <= 200.0, "Grand total " + combo.getGrandTotal() + " must never exceed budget 200.0");
         }
+    }
+
+    @Test
+    @DisplayName("Test 4: Public Root endpoint (GET /) returns running status message")
+    void testPublicRootEndpoint() {
+        HomeController homeController = new HomeController();
+        ResponseEntity<?> response = homeController.home();
+
+        assertNotNull(response);
+        assertEquals(200, response.getStatusCode().value());
+        assertEquals("SmartFood Backend is running!", response.getBody());
     }
 }
