@@ -1,7 +1,14 @@
 class ApiConstants {
-  // Use localhost for desktop/web testing, or 10.0.2.2 for Android emulator
-  static const String baseUrl = 'http://localhost:8080/api';
-  static const String wsUrl = 'ws://localhost:8080/ws-smartfood-direct';
+  // Live Render production backend URL:
+  static const bool isProduction = true;
+  static const String liveBaseUrl = 'https://smartfood-backend-2f18.onrender.com/api';
+  static const String liveWsUrl = 'wss://smartfood-backend-2f18.onrender.com/ws-smartfood-direct';
+
+  static const String localBaseUrl = 'http://localhost:8080/api'; // Or http://10.0.2.2:8080/api for Android emulator
+  static const String localWsUrl = 'ws://localhost:8080/ws-smartfood-direct';
+
+  static String get baseUrl => isProduction ? liveBaseUrl : localBaseUrl;
+  static String get wsUrl => isProduction ? liveWsUrl : localWsUrl;
 
   // Auth Endpoints
   static const String login = '/auth/login';

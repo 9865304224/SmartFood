@@ -1,4 +1,8 @@
-const API_BASE = 'http://localhost:8080/api';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || (
+  typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+    ? 'http://localhost:8080/api'
+    : 'https://smartfood-backend-2f18.onrender.com/api'
+);
 
 export const api = {
   token: localStorage.getItem('smartfood_admin_token') || '',
